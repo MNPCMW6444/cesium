@@ -1,0 +1,335 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no"
+    />
+    <meta name="description" content="Test texts with control characters" />
+    <meta name="cesium-sandcastle-labels" content="Showcases, Test Tests" />
+    <title>Cesium Demo</title>
+    <script type="text/javascript" src="../Sandcastle-header.js"></script>
+    <script
+      type="text/javascript"
+      src="../../../Build/CesiumUnminified/Cesium.js"
+      nomodule
+    ></script>
+    <script type="module" src="../load-cesium-es6.js"></script>
+  </head>
+  <body class="sandcastle-loading" data-sandcastle-bucket="bucket-requirejs.html">
+    <style>
+      @import url(../templates/bucket.css);
+      #toolbar {
+        background: rgba(42, 42, 42, 0.8);
+        padding: 4px;
+        border-radius: 4px;
+      }
+      #toolbar input {
+        vertical-align: middle;
+        padding-top: 2px;
+        padding-bottom: 2px;
+      }
+    </style>
+    <div id="cesiumContainer" class="fullSize"></div>
+    <div id="loadingOverlay"><h1>Loading...</h1></div>
+    <div id="toolbar">
+      <table>
+        <tbody>
+          <tr>
+            <td>Mode</td>
+            <td>
+              <select
+                data-bind="options: colorBlendModes, value: colorBlendMode"
+              ></select>
+            </td>
+          </tr>
+          <tr>
+            <td>Color</td>
+            <td><select data-bind="options: colors, value: color"></select></td>
+          </tr>
+          <tr>
+            <td>Alpha</td>
+            <td>
+              <input
+                type="range"
+                min="0.0"
+                max="1.0"
+                step="0.01"
+                data-bind="value: alpha, valueUpdate: 'input'"
+              />
+              <input type="text" size="5" data-bind="value: alpha" />
+            </td>
+          </tr>
+          <tr>
+            <td data-bind="style: { color: colorBlendAmountEnabled ? '' : 'gray'}">
+              Mix
+            </td>
+            <td>
+              <input
+                type="range"
+                min="0.0"
+                max="1.0"
+                step="0.01"
+                data-bind="value: colorBlendAmount, valueUpdate: 'input', enable: colorBlendAmountEnabled"
+              />
+              <input
+                type="text"
+                size="5"
+                data-bind="value: colorBlendAmount, enable: colorBlendAmountEnabled"
+              />
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <script id="cesium_sandcastle_script">
+      window.startup = async function (Cesium) {
+        "use strict";
+        //Sandcastle_Begin
+        // Test strings with various control characters and emojis
+        const testStrings = [
+          { text: "test - normal text" },
+          {
+            suspectedText: "\u200f",
+            testText: "test \u200f - with Right-to-Left Mark (RLM)",
+          },
+          {
+            suspectedText: "\u200e",
+            testText: "test \u200e - with Left-to-Right Mark (LRM)",
+          },
+          { suspectedText: "\u200b", testText: "test \u200b - with Zero-Width Space" },
+          {
+            suspectedText: "\u200c",
+            testText: "test \u200c - with Zero-Width Non-Joiner",
+          },
+          { suspectedText: "\u200d", testText: "test \u200d - with Zero-Width Joiner" },
+          { suspectedText: "\u00ad", testText: "test \u00ad - with Soft Hyphen" },
+          {
+            suspectedText: "\u202a",
+            testText: "test \u202a - with Left-to-Right Embedding",
+          },
+          {
+            suspectedText: "\u202b",
+            testText: "test \u202b - with Right-to-Left Embedding",
+          },
+          {
+            suspectedText: "\u202c",
+            testText: "test \u202c - with Pop Directional Formatting",
+          },
+          {
+            suspectedText: "\u202d",
+            testText: "test \u202d - with Left-to-Right Override",
+          },
+          {
+            suspectedText: "\u202e",
+            testText: "test \u202e - with Right-to-Left Override",
+          },
+          { suspectedText: "\u2060", testText: "test \u2060 - with Word Joiner" },
+          {
+            suspectedText: "\u2066",
+            testText: "test \u2066 - with Left-to-Right Isolate",
+          },
+          {
+            suspectedText: "\u2067",
+            testText: "test \u2067 - with Right-to-Left Isolate",
+          },
+          {
+            suspectedText: "\u2068",
+            testText: "test \u2068 - with First Strong Isolate",
+          },
+          {
+            suspectedText: "\u2069",
+            testText: "test \u2069 - with Pop Directional Isolate",
+          },
+          {
+            suspectedText: "\u206a",
+            testText: "test \u206a - with Inhibit Symmetric Swapping",
+          },
+          {
+            suspectedText: "\u206b",
+            testText: "test \u206b - with Activate Symmetric Swapping",
+          },
+          {
+            suspectedText: "\u206c",
+            testText: "test \u206c - with Inhibit Arabic Form Shaping",
+          },
+          {
+            suspectedText: "\u206d",
+            testText: "test \u206d - with Activate Arabic Form Shaping",
+          },
+          {
+            suspectedText: "\u206e",
+            testText: "test \u206e - with National Digit Shapes",
+          },
+          {
+            suspectedText: "\u206f",
+            testText: "test \u206f - with Nominal Digit Shapes",
+          },
+          { suspectedText: "\u0000", testText: "test \u0000 - with Null Character" },
+          {
+            suspectedText: "\u0001",
+            testText: "test \u0001 - with Start of Heading (SOH)",
+          },
+          { suspectedText: "\u0002", testText: "test \u0002 - with Start of Text (STX)" },
+          { suspectedText: "\u0003", testText: "test \u0003 - with End of Text (ETX)" },
+          {
+            suspectedText: "\u0004",
+            testText: "test \u0004 - with End of Transmission (EOT)",
+          },
+          { suspectedText: "\u0005", testText: "test \u0005 - with Enquiry (ENQ)" },
+          { suspectedText: "\u0006", testText: "test \u0006 - with Acknowledge (ACK)" },
+          { suspectedText: "\u0007", testText: "test \u0007 - with Bell (BEL)" },
+          { suspectedText: "\u0008", testText: "test \u0008 - with Backspace (BS)" },
+          { suspectedText: "\u0009", testText: "test \u0009 - with Horizontal Tab (HT)" },
+          { suspectedText: "\u000A", testText: "test \u000A - with Line Feed (LF)" },
+          { suspectedText: "\u000B", testText: "test \u000B - with Vertical Tab (VT)" },
+          { suspectedText: "\u000C", testText: "test \u000C - with Form Feed (FF)" },
+          {
+            suspectedText: "\u000D",
+            testText: "test \u000D - with Carriage Return (CR)",
+          },
+          { suspectedText: "\u000E", testText: "test \u000E - with Shift Out (SO)" },
+          { suspectedText: "\u000F", testText: "test \u000F - with Shift In (SI)" },
+          {
+            suspectedText: "\u0010",
+            testText: "test \u0010 - with Data Link Escape (DLE)",
+          },
+          {
+            suspectedText: "\u0011",
+            testText: "test \u0011 - with Device Control 1 (DC1)",
+          },
+          {
+            suspectedText: "\u0012",
+            testText: "test \u0012 - with Device Control 2 (DC2)",
+          },
+          {
+            suspectedText: "\u0013",
+            testText: "test \u0013 - with Device Control 3 (DC3)",
+          },
+          {
+            suspectedText: "\u0014",
+            testText: "test \u0014 - with Device Control 4 (DC4)",
+          },
+          {
+            suspectedText: "\u0015",
+            testText: "test \u0015 - with Negative Acknowledge (NAK)",
+          },
+          {
+            suspectedText: "\u0016",
+            testText: "test \u0016 - with Synchronous Idle (SYN)",
+          },
+          {
+            suspectedText: "\u0017",
+            testText: "test \u0017 - with End of Transmission Block (ETB)",
+          },
+          { suspectedText: "\u0018", testText: "test \u0018 - with Cancel (CAN)" },
+          { suspectedText: "\u0019", testText: "test \u0019 - with End of Medium (EM)" },
+          { suspectedText: "\u001A", testText: "test \u001A - with Substitute (SUB)" },
+          { suspectedText: "\u001B", testText: "test \u001B - with Escape (ESC)" },
+          { suspectedText: "\u001C", testText: "test \u001C - with File Separator (FS)" },
+          {
+            suspectedText: "\u001D",
+            testText: "test \u001D - with Group Separator (GS)",
+          },
+          {
+            suspectedText: "\u001E",
+            testText: "test \u001E - with Record Separator (RS)",
+          },
+          { suspectedText: "\u001F", testText: "test \u001F - with Unit Separator (US)" },
+          { suspectedText: "😀", testText: "test 😀 - Emoji" },
+          { suspectedText: "🌍", testText: "test 🌍 - Emoji" },
+          { suspectedText: "❤️", testText: "test ❤️ - Emoji" },
+        ];
+
+        // Track problematic characters and last status in localStorage
+        const problematicChars =
+          JSON.parse(localStorage.getItem("problematicChars")) || [];
+        let currentIndex = parseInt(localStorage.getItem("currentIndex"), 10) || 0;
+        const lastStatus = localStorage.getItem("lastStatus") || "";
+
+        // Function to finalize test status after delay
+        function finalizeTest(status) {
+          if (status === "failed") {
+            problematicChars.push(testStrings[currentIndex - 1].suspectedText);
+            localStorage.setItem("problematicChars", JSON.stringify(problematicChars));
+          }
+          localStorage.setItem("lastStatus", status);
+          localStorage.setItem("currentIndex", currentIndex);
+
+          setTimeout(() => {
+            location.reload();
+          }, 2000);
+        }
+
+        // Check if previous test failed and log it as problematic
+        if (lastStatus === "failed") {
+          console.error(`Test failed: ${testStrings[currentIndex - 1].suspectedText}`);
+        }
+
+        // Function to create a new viewer and run the test after a delay
+        function runTest() {
+          // Check if all tests are completed
+          if (currentIndex >= testStrings.length) {
+            console.log("All tests completed.");
+            console.log("Problematic characters:", problematicChars);
+
+            localStorage.removeItem("currentIndex");
+            localStorage.removeItem("problematicChars");
+            localStorage.removeItem("lastStatus");
+            return;
+          }
+
+          // Initialize a new viewer instance
+          const viewer = new Cesium.Viewer("cesiumContainer");
+
+          // Set the test string
+          const currentTest = testStrings[currentIndex];
+          viewer.entities.add({
+            position: Cesium.Cartesian3.fromDegrees(-75.0, 40.0),
+            label: {
+              text: currentTest.testText,
+              font: "24px Helvetica",
+              fillColor: Cesium.Color.YELLOW,
+            },
+          });
+
+          viewer.zoomTo(viewer.entities);
+          console.log(`Testing: ${currentTest.suspectedText}`);
+
+          // Move to the next test
+          currentIndex += 1;
+
+          // Use a delay to verify rendering has not stopped
+          setTimeout(() => {
+            // Check if Cesium’s rendering has stopped indirectly
+            if (document.querySelector(".cesium-widget-errorPanel")) {
+              finalizeTest("failed");
+            } else {
+              finalizeTest("success");
+            }
+          }, 500); // Short delay to verify rendering status
+        }
+
+        // Global error handler to detect rendering stops
+        window.onerror = function () {
+          finalizeTest("failed");
+        };
+
+        // Start the test
+        runTest();
+
+        //Sandcastle_End
+      };
+      if (typeof Cesium !== "undefined") {
+        window.startupCalled = true;
+        window.startup(Cesium).catch((error) => {
+          "use strict";
+          console.error(error);
+        });
+        Sandcastle.finishedLoading();
+      }
+    </script>
+  </body>
+</html>

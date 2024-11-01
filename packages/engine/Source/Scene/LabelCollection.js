@@ -118,8 +118,74 @@ function addGlyphToTextureAtlas(textureAtlas, id, canvas, glyphTextureInfo) {
 
 const splitter = new GraphemeSplitter();
 
+// Filter to remove unsupported control characters like RLM (\u200f)
+function filterUnsupportedCharacters(text) {
+  const problematicCharactersByTesting = [
+    "slash u200b",
+    "slash u200e",
+    "slash u200f",
+    "slash u200c",
+    "slash u200d",
+    "slash u202a",
+    "slash u202b",
+    "slash u202c",
+    "slash u202d",
+    "slash u202e",
+    "slash u2060",
+    "slash u2066",
+    "slash u2067",
+    "slash u2068",
+    "slash u2069",
+    "slash u206a",
+    "slash u206b",
+    "slash u206c",
+    "slash u206d",
+    "slash u206e",
+    "slash u206f",
+    "slash u0000",
+    "slash u0001",
+    "slash u0002",
+    "slash u0003",
+    "slash u0004",
+    "slash u0005",
+    "slash u0006",
+    "slash u0007",
+    "slash u0008",
+    "slash u000E",
+    "slash u0018",
+    "slash u0019",
+    "slash u001A",
+    "slash u001B",
+    "slash u001C",
+    "slash u001E",
+    "slash u001F",
+    "slash u000F",
+    "slash u0010",
+    "slash u0011",
+    "slash u0012",
+    "slash u0013",
+    "slash u0014",
+    "slash u0015",
+    "slash u0016",
+    "slash u0017",
+    "slash u001D",
+  ];
+
+  const regexPattern = problematicCharactersByTesting
+    .map((char) => char.replace("slash u", "\\u")) // Replace "slash u" with "\u"
+    .join("|"); // Join with | to match any character in the list
+
+  const problematicCharactersRegex = new RegExp(regexPattern, "g");
+  console.log(text, text.replace(problematicCharactersRegex, ""));
+  return text.replace(problematicCharactersRegex, "");
+}
+
 function rebindAllGlyphs(labelCollection, label) {
-  const text = label._renderedText;
+  let text = label._renderedText;
+
+  // Filter out unsupported control characters
+  text = filterUnsupportedCharacters(text);
+
   const graphemes = splitter.splitGraphemes(text);
   const textLength = graphemes.length;
   const glyphs = label._glyphs;

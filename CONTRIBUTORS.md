@@ -91,3 +91,4 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for details on how to contribute to Cesiu
 * [Mati Ostrovsky](https://github.com/mati-o)
 * [Tom Novacek](https://github.com/novacto2)
 * [Olivier Guyot-Roullot](https://github.com/theOgrable)
+- [Michael Nusair](https://github.com/mnpcmw6444)

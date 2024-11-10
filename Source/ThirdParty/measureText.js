@@ -165,11 +165,29 @@ define(function() {
         while (--i > 0 && pixelData[i] === 255) {}
         var descent = (i/w4)|0;
 
-        // find the min-x coordinate
-        for(i = 0; i<len && pixelData[i] === 255; ) {
-          i += w4;
-          if(i>=len) { i = (i-len) + 4; }}
-        var minx = ((i%w4)/4) | 0;
+        // Attempt to find the min-x coordinate
+        console.log("Starting min-x calculation for:", textstring);
+
+        var maxAttempts = Math.floor(len / w4);  // Limit iterations to avoid infinite loop
+        var attempts = 0;
+
+        for (i = 0; i < len && pixelData[i] === 255; ) {
+            i += w4;
+            attempts++;
+
+            if (attempts > maxAttempts) {
+                console.warn("Loop exceeded maximum attempts, breaking out to prevent freeze.");
+                i = len;  // Exit the loop by setting `i` to `len`
+                break;
+            }
+
+            if (i >= len) {
+                i = (i - len) + 4;
+            }
+        }
+
+        var minx = ((i % w4) / 4) | 0;
+        console.log("Min-x calculated:", minx, "for text:", textstring);
 
         // find the max-x coordinate
         var step = 1;

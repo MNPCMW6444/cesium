@@ -81,13 +81,24 @@ define([
             "slash u001D",
         ];
 
-        var regexPattern = problematicCharactersByTesting
-            .map((char) => char.replace("slash u", "\\u")) // Replace "slash u" with "\u"
-            .join("|"); // Join with | to match any character in the list
 
-        var problematicCharactersRegex = new RegExp(regexPattern, "g");
-        console.log(text, text.replace(problematicCharactersRegex, ""));
-        return text.replace(problematicCharactersRegex, "");
+        function removeProblematicStrings(text, problematicStrings) {
+            var result = text;
+
+            if(result) {
+                for (var i = 0; i < problematicStrings.length; i++) {
+                    while (result.includes(problematicStrings[i])) {
+                        result = result.replace(problematicStrings[i], "");
+                    }
+                }
+            }
+
+            return result;
+        }
+
+// Exampl
+
+        return removeProblematicStrings(text,problematicCharactersByTesting)
     }
 
 

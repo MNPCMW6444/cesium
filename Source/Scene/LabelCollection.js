@@ -94,7 +94,60 @@ define([
     }
 
     function rebindAllGlyphs(labelCollection, label) {
-        var text = label._text;
+        var problematicCharactersByTesting = [
+            "\u200b",
+            "\u200e",
+            "\u200f",
+            "\u200c",
+            "\u200d",
+            "\u202a",
+            "\u202b",
+            "\u202c",
+            "\u202d",
+            "\u202e",
+            "\u2060",
+            "\u2066",
+            "\u2067",
+            "\u2068",
+            "\u2069",
+            "\u206a",
+            "\u206b",
+            "\u206c",
+            "\u206d",
+            "\u206e",
+            "\u206f",
+            "\u0000",
+            "\u0001",
+            "\u0002",
+            "\u0003",
+            "\u0004",
+            "\u0005",
+            "\u0006",
+            "\u0007",
+            "\u0008",
+            "\u000E",
+            "\u0018",
+            "\u0019",
+            "\u001A",
+            "\u001B",
+            "\u001C",
+            "\u001E",
+            "\u001F",
+            "\u000F",
+            "\u0010",
+            "\u0011",
+            "\u0012",
+            "\u0013",
+            "\u0014",
+            "\u0015",
+            "\u0016",
+            "\u0017",
+            "\u001D",
+        ];
+        var text = label._text.replace();
+        for(var i=0;i<problematicCharactersByTesting.length;i++) {
+            text = text.replace(problematicCharactersByTesting[i], "");
+        }
         var textLength = text.length;
         var glyphs = label._glyphs;
         var glyphsLength = glyphs.length;

@@ -1,7 +1,7 @@
 {
   "name": "cesium",
-  "version": "1.21.0",
-  "description": "Cesium is a JavaScript library for creating 3D globes and 2D maps in a web browser without a plugin.",
+  "version": "1.21.6445",
+  "description": "Cesium is a JavaScript library for creating 3D globes and 2D maps in a web browser without a plugin. forked by Michael Nusair to fix the unsupported characters issue in version 21",
   "homepage": "http://cesiumjs.org",
   "license": "Apache-2.0",
   "author": {
@@ -9,8 +9,8 @@
     "url": "http://www.agi.com"
   },
   "contributors": {
-    "name": "Cesium community",
-    "url": "https://github.com/AnalyticalGraphicsInc/cesium/blob/master/CONTRIBUTORS.md"
+    "name": "MNPCMW6444 fork",
+    "url": "https://github.com/CesiumGS/cesium/blob/main/CONTRIBUTORS.md"
   },
   "keywords": [
     "3D",

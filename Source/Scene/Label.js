@@ -1,4 +1,6 @@
 /*global define*/
+import Label from "../../packages/engine/Source/Scene/Label";
+
 define([
         '../Core/Cartesian2',
         '../Core/Cartesian3',
@@ -44,6 +46,21 @@ define([
         }
         label._repositionAllGlyphs = true;
     }
+
+    /**
+     * Removes control characters and soft hyphon (auto-wrap) characters, which will cause an error when rendering a glyph. This does not remove tabs, carriage returns, or newlines.
+     * @private
+     * @param {string} text The original label text
+     * @returns {string} The renderable filtered text
+     */
+    function filterUnsupportedCharacters (text) {
+        var problematicCharactersRegex = new RegExp(
+            // eslint-disable-next-line no-control-regex
+            /[\u0000-\u0008\u000E-\u001F\u00ad\u202a-\u206f\u200b-\u200f]/,
+            "g",
+        );
+        return text.replace(problematicCharactersRegex, "");
+    };
 
     /**
      * A Label draws viewport-aligned text positioned in the 3D scene.  This constructor
@@ -211,6 +228,7 @@ define([
 
                 if (this._text !== value) {
                     this._text = value;
+                    this._text = filterUnsupportedCharacters(this._text);
                     rebindAllGlyphs(this);
                 }
             }
